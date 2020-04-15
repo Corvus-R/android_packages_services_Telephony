@@ -298,6 +298,7 @@ public class TelephonyConnectionService extends ConnectionService {
         PhoneAccountHandle makePstnPhoneAccountHandle(Phone phone);
         PhoneAccountHandle makePstnPhoneAccountHandleWithPrefix(Phone phone, String prefix,
                 boolean isEmergency);
+        int getPhoneIdForECall();
     }
 
     private PhoneUtilsProxy mPhoneUtilsProxy = new PhoneUtilsProxy() {
@@ -315,6 +316,11 @@ public class TelephonyConnectionService extends ConnectionService {
         public PhoneAccountHandle makePstnPhoneAccountHandleWithPrefix(Phone phone, String prefix,
                 boolean isEmergency) {
             return PhoneUtils.makePstnPhoneAccountHandleWithPrefix(phone, prefix, isEmergency);
+        }
+
+        @Override
+        public int getPhoneIdForECall() {
+            return PhoneUtils.getPhoneIdForECall();
         }
     };
 
@@ -1035,7 +1041,7 @@ public class TelephonyConnectionService extends ConnectionService {
         if (connection == null) {
             return Connection.createCanceledConnection();
         } else {
-            connection.setTtyEnabled(isTtyModeEnabled(getApplicationContext()));
+            connection.setTtyEnabled(mDeviceState.isTtyModeEnabled(this));
             return connection;
         }
     }
